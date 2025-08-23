@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadProductImage = exports.updateProductById = exports.getProductById = exports.getAllProducts = exports.deleteProductById = exports.createProduct = void 0;
+exports.getProductsForSearchQuery = exports.uploadProductImage = exports.updateProductById = exports.getProductById = exports.getAllProducts = exports.deleteProductById = exports.createProduct = void 0;
 var Product_1 = __importDefault(require("../infrastructure/db/entities/Product"));
 var validation_error_1 = __importDefault(require("../domain/errors/validation-error"));
 var not_found_error_1 = __importDefault(require("../domain/errors/not-found-error"));
@@ -205,4 +205,44 @@ var uploadProductImage = function (req, res, next) { return __awaiter(void 0, vo
     });
 }); };
 exports.uploadProductImage = uploadProductImage;
+var getProductsForSearchQuery = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var search, results, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                search = req.query.search;
+                return [4 /*yield*/, Product_1.default.aggregate([
+                        {
+                            $search: {
+                                index: "default",
+                                autocomplete: {
+                                    path: "name",
+                                    query: search,
+                                    tokenOrder: "any",
+                                    fuzzy: {
+                                        maxEdits: 1,
+                                        prefixLength: 2,
+                                        maxExpansions: 256,
+                                    },
+                                },
+                                highlight: {
+                                    path: "name",
+                                },
+                            },
+                        },
+                    ])];
+            case 1:
+                results = _a.sent();
+                res.json(results);
+                return [3 /*break*/, 3];
+            case 2:
+                error_7 = _a.sent();
+                next(error_7);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getProductsForSearchQuery = getProductsForSearchQuery;
 //# sourceMappingURL=product.js.map

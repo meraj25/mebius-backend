@@ -8,6 +8,7 @@ var product_1 = require("../application/product");
 var authentication_middleware_1 = __importDefault(require("./middleware/authentication-middleware"));
 var authorization_middleware_1 = require("./middleware/authorization-middleware");
 var productRouter = express_1.default.Router();
+productRouter.get("/search", product_1.getProductsForSearchQuery);
 productRouter
     .route("/")
     .get(product_1.getAllProducts)

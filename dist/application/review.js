@@ -58,6 +58,9 @@ var createReview = function (req, res, next) { return __awaiter(void 0, void 0, 
                 return [4 /*yield*/, Product_1.default.findById(data.productId)];
             case 2:
                 product = _a.sent();
+                if (!product) {
+                    return [2 /*return*/, res.status(404).json({ message: "Product not found" })];
+                }
                 product.reviews.push(review._id);
                 return [4 /*yield*/, product.save()];
             case 3:
