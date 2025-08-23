@@ -11,6 +11,9 @@ const createReview = async (req:Request, res:Response, next:NextFunction) => {
     });
 
     const product = await Product.findById(data.productId);
+    if (!product) {
+  return res.status(404).json({ message: "Product not found" });
+}
     product.reviews.push(review._id);
     await product.save();
 
