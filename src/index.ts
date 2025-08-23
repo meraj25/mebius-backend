@@ -25,7 +25,7 @@ app.use(express.json()); //It conversts the incomign json payload of a  request 
 
 app.use(clerkMiddleware());
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 
 app.use("/api/products", productRouter);
