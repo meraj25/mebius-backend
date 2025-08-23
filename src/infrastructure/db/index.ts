@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { de } from "zod/v4/locales/index.cjs";
 
 const connectDB = async () => {
   try {
@@ -17,5 +18,3 @@ const connectDB = async () => {
 };
 
 export default connectDB;
-
-

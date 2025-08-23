@@ -5,12 +5,15 @@ import {createProduct,
   getProductById,
   updateProductById,
   uploadProductImage,
+  getProductsForSearchQuery
 } from "../application/product";
 
 import isAuthenticated from "./middleware/authentication-middleware";
 import { isAdmin } from "./middleware/authorization-middleware";
 
 const productRouter = express.Router();
+
+productRouter.get("/search", getProductsForSearchQuery);
 
 productRouter
   .route("/")
@@ -26,6 +29,8 @@ productRouter
 productRouter
   .route("/images")
   .post(uploadProductImage);
+
+
   
 
 export default productRouter;

@@ -130,6 +130,39 @@ const uploadProductImage = async (
     next(error);
   }
 };
+
+const getProductsForSearchQuery = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { search } = req.query;
+    const results = await Product.aggregate([
+      {
+        $search: {
+          index: "default",
+          autocomplete: {
+            path: "name",
+            query: search,
+            tokenOrder: "any",
+            fuzzy: {
+              maxEdits: 1,
+              prefixLength: 2,
+              maxExpansions: 256,
+            },
+          },
+          highlight: {
+            path: "name",
+          },
+        },
+      },
+    ]);
+    res.json(results);
+  } catch (error) {
+    next(error);
+  }
+};
 export  {
   createProduct,
   deleteProductById,
@@ -137,7 +170,7 @@ export  {
   getProductById,
   updateProductById,
   uploadProductImage,
-
+  getProductsForSearchQuery
 };
 
 
