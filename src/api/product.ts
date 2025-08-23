@@ -5,7 +5,8 @@ import {createProduct,
   getProductById,
   updateProductById,
   uploadProductImage,
-  getProductsForSearchQuery
+  getProductsForSearchQuery,
+
 } from "../application/product";
 
 import isAuthenticated from "./middleware/authentication-middleware";
@@ -31,6 +32,5 @@ productRouter
   .post(uploadProductImage);
 
 
-  
 
 export default productRouter;

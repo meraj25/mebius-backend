@@ -15,8 +15,8 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
 
   //! By calling req.auth() or passing the request to getAuth() we can get the auth data from the request
   //! userId can be obtained from the auth object
-  // console.log(req.auth());
-  // console.log(getAuth(req));
+   //console.log(req.auth());
+   //console.log(getAuth(req));
   next();
 };
 

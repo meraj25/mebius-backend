@@ -27,6 +27,8 @@ const getAllProducts = async (
   }
 };
 
+
+
 const createProduct = async (
   req: Request,
   res: Response,
@@ -170,7 +172,8 @@ export  {
   getProductById,
   updateProductById,
   uploadProductImage,
-  getProductsForSearchQuery
+  getProductsForSearchQuery,
+
 };
 
 
