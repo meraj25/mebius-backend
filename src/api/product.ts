@@ -7,6 +7,7 @@ import {createProduct,
   uploadProductImage,
   getProductsForSearchQuery,
 
+
 } from "../application/product";
 
 import isAuthenticated from "./middleware/authentication-middleware";
@@ -20,6 +21,8 @@ productRouter
   .route("/")
   .get(getAllProducts)
   .post(isAuthenticated, isAdmin, createProduct);
+;
+
 
 productRouter
   .route("/:id")
