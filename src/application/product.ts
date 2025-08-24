@@ -14,35 +14,20 @@ const getAllProducts = async (
   next: NextFunction
 ) => {
   try {
-    const categoryId = req.query.categoryId;
-    const color = req.query.color;
-    const sort = req.query.sort;
-    const order = req.query.order;
+    const { categoryId } = req.query;
 
-    if (categoryId) {
-      const products = await Product.find({ categoryId });
-      return res.json(products);
+    let products;
+    if (!categoryId) {
+      products = await Product.find();
+    } else {
+      products = await Product.find({ category: categoryId });
     }
 
-    if (color) {
-      const products = await Product.find({ color });
-      return res.json(products);
-    }
-
-    if (sort === "price" && order) {
-      const sortOrder = order === "desc" ? -1 : 1;
-      const products = await Product.find().sort({ price: sortOrder });
-      return res.json(products);
-    }
-
-
-    const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
     next(error);
   }
 };
-
 
 
 const createProduct = async (
