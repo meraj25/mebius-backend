@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   },
   stripePriceId: {
     type: String,
-    required: true,
+    required: false,
   },
   image: {
     type: String,
@@ -30,11 +30,16 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   reviews: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Review",
     default: [],
   },
+  
 });
 
 const Product = mongoose.model("Product", productSchema);

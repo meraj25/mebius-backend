@@ -35,7 +35,7 @@ const getAllProducts = async (
       return res.json(products);
     }
 
-    // default: get all
+
     const products = await Product.find();
     res.json(products);
   } catch (error) {

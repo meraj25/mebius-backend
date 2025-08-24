@@ -44,4 +44,21 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createOrder, getOrder };
+const getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.query.userId;
+    if (userId) {
+      const orders = await Order.find({ userId });
+      return res.status(200).json(orders);
+    }
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+export { createOrder, getOrder, getAllOrders };
+
