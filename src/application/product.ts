@@ -15,13 +15,29 @@ const getAllProducts = async (
 ) => {
   try {
     const categoryId = req.query.categoryId;
+    const color = req.query.color;
+    const sort = req.query.sort;
+    const order = req.query.order;
+
     if (categoryId) {
       const products = await Product.find({ categoryId });
-      res.json(products);
-    } else {
-      const products = await Product.find();
-      res.json(products);
+      return res.json(products);
     }
+
+    if (color) {
+      const products = await Product.find({ color });
+      return res.json(products);
+    }
+
+    if (sort === "price" && order) {
+      const sortOrder = order === "desc" ? -1 : 1;
+      const products = await Product.find().sort({ price: sortOrder });
+      return res.json(products);
+    }
+
+    // default: get all
+    const products = await Product.find();
+    res.json(products);
   } catch (error) {
     next(error);
   }
