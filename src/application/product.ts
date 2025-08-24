@@ -9,26 +9,29 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import S3 from "../infrastructure/s3";
 import mongoose from "mongoose";
 
+
 const getAllProducts = async (req: Request,
   res: Response,
   next: NextFunction) => {
   try {
-    const categoryId = req.query.categoryId as string | undefined;
+    // Get categoryId from query string
+    const categoryId = req.query.categoryId;
 
     let products;
 
-    if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
-      // Only convert if it's a valid ObjectId string
+    // Check if categoryId exists and is a valid ObjectId
+    if (categoryId && typeof categoryId === "string" && mongoose.Types.ObjectId.isValid(categoryId)) {
       products = await Product.find({
-        category: new mongoose.Types.ObjectId(categoryId),
+        categoryId: new mongoose.Types.ObjectId(categoryId),
       });
     } else {
+      // If no valid categoryId, return all products
       products = await Product.find();
     }
 
     res.status(200).json(products);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching products:", error);
     next(error);
   }
 };
