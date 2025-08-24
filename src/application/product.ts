@@ -7,24 +7,28 @@ import { randomUUID } from "crypto";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import S3 from "../infrastructure/s3";
+import mongoose from "mongoose";
 
-const getAllProducts = async (
-  req: Request,
+const getAllProducts = async (req: Request,
   res: Response,
-  next: NextFunction
-) => {
+  next: NextFunction) => {
   try {
-    const { categoryId } = req.query;
+    const categoryId = req.query.categoryId as string | undefined;
 
     let products;
-    if (!categoryId) {
-      products = await Product.find();
+
+    if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
+      // Only convert if it's a valid ObjectId string
+      products = await Product.find({
+        category: new mongoose.Types.ObjectId(categoryId),
+      });
     } else {
-      products = await Product.find({ category: categoryId });
+      products = await Product.find();
     }
 
     res.status(200).json(products);
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };
