@@ -3,6 +3,7 @@ import express from "express";
 import productRouter from "./api/product";
 import categoryRouter from "./api/category";
 import reviewRouter from "./api/review";
+import colorRouter from "./api/color";
 import connectDB from "./infrastructure/db/index";
 import globalErrorHandlingMiddleware from "./api/middleware/global-error-handling-middleware";
 import cors from "cors";
@@ -33,6 +34,8 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payments", paymentsRouter);
+app.use("/api/colors", colorRouter);
+
 
 app.use(globalErrorHandlingMiddleware);
 
