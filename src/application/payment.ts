@@ -96,7 +96,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
   }
   
   const session = await stripe.checkout.sessions.create({
-   
+    ui_mode: "embedded",
     line_items: order.items.map((item) => ({
       price: item.productId.stripePriceId,
       quantity: item.quantity,
@@ -107,7 +107,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       orderId: req.body.orderId,
     },
   });
- res.json({ clientSecret: session.id }); // Must send a string
+res.send({ clientSecret: session.client_secret });
  
 };
 
