@@ -85,33 +85,30 @@ export const handleWebhook = async (req: Request, res: Response) => {
 };
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
-  try {
-    const orderId = req.body.orderId;
-    const order = await Order.findById(orderId).populate("items.productId");
+  const orderId = req.body.orderId;
+  console.log("body", req.body);
+  const order = await Order.findById(orderId).populate<{
+    items: { productId: Product; quantity: number }[];
+  }>("items.productId");
 
-    if (!order) {
-      return res.status(404).json({ error: "Order not found" });
-    }
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],  // add this explicitly
-      line_items: order.items.map((item) => ({
-        price: item.productId.stripePriceId,
-        quantity: item.quantity,
-      })),
-      mode: "payment",
-      success_url: `${FRONTEND_URL}/shop/complete?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${FRONTEND_URL}/shop/cancel`,
-      metadata: {
-        orderId: orderId,
-      },
-    });
-
-    res.json({ clientSecret: session.id }); // Only one response sent
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error instanceof Error ? error.message : "Internal Server Error" });
+  if (!order) {
+    throw new Error("Order not found");
   }
+  
+  const session = await stripe.checkout.sessions.create({
+   
+    line_items: order.items.map((item) => ({
+      price: item.productId.stripePriceId,
+      quantity: item.quantity,
+    })),
+    mode: "payment",
+    return_url: `${FRONTEND_URL}/shop/complete?session_id={CHECKOUT_SESSION_ID}`,
+    metadata: {
+      orderId: req.body.orderId,
+    },
+  });
+ res.json({ clientSecret: session.id }); // Must send a string
+ 
 };
 
 export const retrieveSessionStatus = async (req: Request, res: Response) => {
