@@ -26,7 +26,12 @@ app.use(express.json()); //It conversts the incomign json payload of a  request 
 
 app.use(clerkMiddleware());
 
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(cors({ 
+  origin: process.env.FRONTEND_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+
+}));
 
 
 app.use("/api/products", productRouter);
