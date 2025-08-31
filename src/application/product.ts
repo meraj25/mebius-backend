@@ -14,7 +14,7 @@ const getAllProducts = async (req: Request, res: Response, next: NextFunction) =
   try {
     const categoryId = req.query.categoryId as string;
     const color = req.query.color as string;
-    const sortPrice = req.query.sortPrice as string; // expected values: 'asc' or 'desc'
+    const sortPrice = req.query.sortPrice as string; 
     
     const filter: any = {};
     
@@ -26,12 +26,12 @@ const getAllProducts = async (req: Request, res: Response, next: NextFunction) =
       filter.color = new mongoose.Types.ObjectId(color);
     }
     
-    // Compose sort criteria based on sortPrice query param
+   
     let sortCriteria: any = {};
     if (sortPrice === 'asc') {
-      sortCriteria.price = 1; // ascending order
+      sortCriteria.price = 1; 
     } else if (sortPrice === 'desc') {
-      sortCriteria.price = -1; // descending order
+      sortCriteria.price = -1; 
     }
     
     const products = await Product.find(filter).sort(sortCriteria);
