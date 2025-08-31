@@ -3,6 +3,7 @@ import util from "util";
 import Order from "../infrastructure/db/entities/Order";
 import stripe from "../infrastructure/stripe";
 import Product from "../infrastructure/db/entities/Product";
+import { Client } from "@clerk/express";
 
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -107,8 +108,10 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       orderId: req.body.orderId,
     },
   });
+  console.log(session.client_secret);
 res.send({ clientSecret: session.client_secret });
- 
+
+
 };
 
 export const retrieveSessionStatus = async (req: Request, res: Response) => {
