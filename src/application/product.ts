@@ -10,31 +10,39 @@ import S3 from "../infrastructure/s3";
 import mongoose from "mongoose";
 
 
-const getAllProducts = async (req: Request,
-  res: Response,
-  next: NextFunction) => {
+const getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Get categoryId from query string
-    const categoryId = req.query.categoryId;
-
-    let products;
-
-    // Check if categoryId exists and is a valid ObjectId
-    if (categoryId && typeof categoryId === "string" && mongoose.Types.ObjectId.isValid(categoryId)) {
-      products = await Product.find({
-        categoryId: new mongoose.Types.ObjectId(categoryId),
-      });
-    } else {
-      // If no valid categoryId, return all products
-      products = await Product.find();
+    const categoryId = req.query.categoryId as string;
+    const color = req.query.color as string;
+    const sortPrice = req.query.sortPrice as string; // expected values: 'asc' or 'desc'
+    
+    const filter: any = {};
+    
+    if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
+      filter.categoryId = new mongoose.Types.ObjectId(categoryId);
     }
-
+    
+    if (color && mongoose.Types.ObjectId.isValid(color)) {
+      filter.color = new mongoose.Types.ObjectId(color);
+    }
+    
+    // Compose sort criteria based on sortPrice query param
+    let sortCriteria: any = {};
+    if (sortPrice === 'asc') {
+      sortCriteria.price = 1; // ascending order
+    } else if (sortPrice === 'desc') {
+      sortCriteria.price = -1; // descending order
+    }
+    
+    const products = await Product.find(filter).sort(sortCriteria);
+    
     res.status(200).json(products);
   } catch (error) {
     console.error("Error fetching products:", error);
     next(error);
   }
 };
+
 
 
 const createProduct = async (
