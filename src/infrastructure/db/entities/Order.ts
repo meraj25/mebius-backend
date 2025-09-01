@@ -38,7 +38,9 @@ const OrderSchema = new mongoose.Schema({
     enum: ["PENDING", "PAID", "REFUNDED"],
     default: "PENDING",
   },
-});
+}, { timestamps: true }
+);
+ 
 
 const Order = mongoose.model("Order", OrderSchema);
 
