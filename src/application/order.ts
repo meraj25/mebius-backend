@@ -57,8 +57,29 @@ const getAllOrders = async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 };
+const getOrderCounts = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const ordersPerDay = await Order.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          orders: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const formatted = ordersPerDay.map((d) => ({
+      date: d._id,
+      orders: d.orders,
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    next(error);
+  }
+};
 
 
-
-export { createOrder, getOrder, getAllOrders };
+export { createOrder, getOrder, getAllOrders, getOrderCounts };
 
