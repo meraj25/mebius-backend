@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
   },
   stripePriceId: {
     type: String,
-    required: true,
+    required: false,
   },
   image: {
     type: String,
