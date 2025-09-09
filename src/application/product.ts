@@ -58,12 +58,12 @@ const createProduct = async (
 
     const { name, price, description, categoryId, color, image, stock } = result.data;
 
-    // Create Stripe product and price (without image)
-    const stripeProduct = await (await import("../infrastructure/stripe")).default.products.create({
+   
+    const stripeProduct = await stripe.products.create({
       name,
       description,
     });
-    const stripePrice = await (await import("../infrastructure/stripe")).default.prices.create({
+    const stripePrice = await stripe.prices.create({
       product: stripeProduct.id,
       unit_amount: price * 100,
       currency: "usd",

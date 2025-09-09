@@ -8,7 +8,6 @@ const CreateProductDTO = z.object({
   image: z.string().min(1),
   stock: z.number(),
   price: z.number().nonnegative(),
-  stripePriceId: z.string().min(1),
   description: z.string().min(1),
 });
 
