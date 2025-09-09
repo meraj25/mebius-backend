@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   reviews: {
     type: [mongoose.Schema.Types.ObjectId],

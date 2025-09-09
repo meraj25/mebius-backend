@@ -8,7 +8,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import S3 from "../infrastructure/s3";
 import mongoose from "mongoose";
-
+import stripe from "../infrastructure/stripe";
 
 const getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -56,8 +56,30 @@ const createProduct = async (
       throw new ValidationError(result.error.message);
     }
 
-    await Product.create(result.data);
-    res.status(201).send();
+    const { name, price, description, categoryId, color, image, stock } = result.data;
+
+    // Create Stripe product and price (without image)
+    const stripeProduct = await (await import("../infrastructure/stripe")).default.products.create({
+      name,
+      description,
+    });
+    const stripePrice = await (await import("../infrastructure/stripe")).default.prices.create({
+      product: stripeProduct.id,
+      unit_amount: price * 100,
+      currency: "usd",
+    });
+
+    const product = await Product.create({
+      name,
+      price,
+      description,
+      categoryId,
+      color,
+      image,
+      stock,
+      stripePriceId: stripePrice.id,
+    });
+    res.status(201).json(product);
   } catch (error) {
     next(error);
   }
