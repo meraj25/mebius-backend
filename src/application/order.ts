@@ -56,10 +56,10 @@ const getAllOrders = async (req: Request, res: Response, next: NextFunction) => 
 
     const orders = await Order.find(query)
       .populate({
-        path: "items.productId",
-        select: "name image", // choose fields you want to show
+        path: "items.product",
+        select: "name image",
       })
-      .populate("addressId"); // if you want to populate address details
+      .populate("addressId"); 
 
     return res.status(200).json(orders);
   } catch (error) {
