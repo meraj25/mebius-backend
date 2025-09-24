@@ -4,6 +4,7 @@ import Order from "../infrastructure/db/entities/Order";
 import NotFoundError from "../domain/errors/not-found-error";
 import UnauthorizedError from "../domain/errors/unauthorized-error";
 import { getAuth } from "@clerk/express";
+import { populate } from "dotenv";
 
 const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -47,16 +48,25 @@ const getOrder = async (req: Request, res: Response, next: NextFunction) => {
 const getAllOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.query.userId;
+
+    let query = {};
     if (userId) {
-      const orders = await Order.find({ userId });
-      return res.status(200).json(orders);
+      query = { userId };
     }
-    const orders = await Order.find();
-    res.status(200).json(orders);
+
+    const orders = await Order.find(query)
+      .populate({
+        path: "items.productId",
+        select: "name image", // choose fields you want to show
+      })
+      .populate("addressId"); // if you want to populate address details
+
+    return res.status(200).json(orders);
   } catch (error) {
     next(error);
   }
 };
+
 const getOrderCounts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const ordersPerDay = await Order.aggregate([
