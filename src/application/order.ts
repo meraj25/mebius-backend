@@ -56,7 +56,7 @@ const getAllOrders = async (req: Request, res: Response, next: NextFunction) => 
 
     const orders = await Order.find(query)
       .populate({
-        path: "items.product",
+        path: "items.productId",
         select: "name image",
       })
       .populate("addressId"); 
